@@ -4,133 +4,291 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Таро RusLand — Расклад Судьбы</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 
-body{
-  background:#0c0a09;
-  color:#d4c4b7;
-  font-family:'Cormorant Garamond',serif;
-  text-align:center;
-  padding:120px 20px;
+:root {
+  --bg-primary: #0c0a09;
+  --bg-contrast: #080605;
+  --text-main: #d4c4b7;
+  --text-muted: #a89f91;
+  --accent: #c9a871;
+  --accent-dark: #5a4634;
+  --title-size: clamp(40px, 6vw, 80px);
+  --subtitle-size: 22px;
+  --section-space: 100px;
+  --card-gap: 30px;
 }
 
-h1{
-  font-family:'Cinzel',serif;
-  font-size:50px;
-  color:#c9a871;
-  margin-bottom:40px;
-  letter-spacing:4px;
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #0f0d0c; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #3a2c22, #c9a871, #3a2c22);
+  border-radius: 5px;
+  border: 1px solid #1a1512;
 }
 
-input{
-  padding:15px;
-  width:280px;
-  background:#15100c;
-  border:1px solid rgba(201,168,113,0.4);
-  color:white;
-  font-size:18px;
-  text-align:center;
+body {
+  background-color: var(--bg-primary);
+  background-image:
+    radial-gradient(circle at top center, rgba(36, 26, 20, 0.8) 0%, var(--bg-primary) 100%),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+  color: var(--text-main);
+  font-family: 'Cormorant Garamond', serif;
+  overflow-x: hidden;
+  font-size: 18px;
 }
 
-button{
-  margin-top:20px;
-  padding:15px 40px;
-  background:linear-gradient(135deg,#2a1f18,#15100c);
-  border:1px solid #c9a871;
-  color:#c9a871;
-  font-family:'Cinzel',serif;
-  cursor:pointer;
-  transition:.4s;
-}
-button:hover{
-  background:#c9a871;
-  color:#0c0a09;
+h1, h2, h3, .logo, .nav-links a, .cta, .input-label {
+  font-family: 'Cinzel', serif;
 }
 
-.cards{
-  margin-top:90px;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-  gap:40px;
-  max-width:1200px;
-  margin-left:auto;
-  margin-right:auto;
-  perspective:1200px;
+.navbar {
+  position: fixed;
+  width: 100%;
+  background: rgba(12, 10, 9, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(201, 168, 113, 0.2);
+  padding: 15px 0;
+  z-index: 100;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
 }
 
-.card{
-  position:relative;
-  height:360px;
-  transform-style:preserve-3d;
-  transition:transform 1s;
-  cursor:pointer;
+.nav-container {
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
 }
 
-.card.flip{
-  transform:rotateY(180deg);
+.logo {
+  font-weight: 900;
+  font-size: 24px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-decoration: none;
 }
 
-.face{
-  position:absolute;
-  width:100%;
-  height:100%;
-  backface-visibility:hidden;
-  padding:40px 30px;
-  border:1px solid rgba(201,168,113,0.3);
-  background:rgba(20,15,12,0.7);
-  backdrop-filter:blur(10px);
-  box-shadow:0 20px 40px rgba(0,0,0,.9);
+.nav-links a {
+  margin-left: 35px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: 0.3s;
+}
+.nav-links a:hover { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+
+.hero {
+  padding: 180px 20px 80px;
+  text-align: center;
 }
 
-.front{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-family:'Cinzel',serif;
-  font-size:24px;
-  color:#c9a871;
-  letter-spacing:2px;
+.hero h1 {
+  font-size: var(--title-size);
+  font-weight: 900;
+  background: linear-gradient(to bottom, #fff, var(--accent), #8b5a2b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  margin-bottom: 16px;
 }
 
-.back{
-  transform:rotateY(180deg);
-  text-align:left;
+.subtitle {
+  font-size: var(--subtitle-size);
+  color: var(--text-muted);
+  letter-spacing: 3px;
+  font-style: italic;
+  max-width: 760px;
+  margin: 0 auto 48px;
 }
 
-.back h3{
-  font-family:'Cinzel',serif;
-  margin-bottom:15px;
-  color:#e8dcc4;
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: end;
+  gap: 16px;
 }
 
-.back p{
-  line-height:1.6;
-  color:#a89f91;
+.input-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
 }
 
-.rarity{
-  font-size:12px;
-  margin-top:10px;
-  letter-spacing:2px;
+.input-label {
+  font-size: 13px;
+  color: var(--accent);
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
-.common{color:#777}
-.rare{color:#c9a871}
-.legendary{color:#ff4500}
+input {
+  padding: 15px;
+  width: 280px;
+  background: #15100c;
+  border: 1px solid rgba(201,168,113,0.4);
+  color: white;
+  font-size: 18px;
+  text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.cta {
+  padding: 15px 38px;
+  background: linear-gradient(135deg,#2a1f18,#15100c);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  cursor: pointer;
+  transition: .4s;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.cta:hover {
+  background: var(--accent);
+  color: #0c0a09;
+}
+
+.section {
+  padding: var(--section-space) 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--card-gap);
+  perspective: 1200px;
+}
+
+.card {
+  position: relative;
+  min-height: 360px;
+  transform-style: preserve-3d;
+  transition: transform 1s;
+  cursor: pointer;
+}
+
+.card.flip { transform: rotateY(180deg); }
+
+.face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  padding: 40px 30px;
+  border: 1px solid rgba(201,168,113,0.3);
+  background: rgba(20,15,12,0.7);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 40px rgba(0,0,0,.9);
+}
+
+.front {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cinzel', serif;
+  font-size: 24px;
+  color: var(--accent);
+  letter-spacing: 2px;
+}
+
+.back {
+  transform: rotateY(180deg);
+  text-align: left;
+}
+
+.back h3 {
+  font-family: 'Cinzel', serif;
+  margin-bottom: 15px;
+  color: #e8dcc4;
+}
+
+.back p {
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+footer {
+  text-align: center;
+  padding: 50px;
+  font-family: 'Cinzel', serif;
+  color: var(--accent-dark);
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: var(--bg-contrast);
+  border-top: 1px solid #1a1512;
+}
+
+::selection { background: rgba(139, 0, 0, 0.8); color: var(--accent); }
+
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .hero { padding: 140px 20px 60px; }
+  .hero h1 { letter-spacing: 3px; }
+  .subtitle { font-size: 19px; margin-bottom: 34px; }
+  .section { padding: 80px 20px; }
+  .cards {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+  .card { min-height: 320px; }
+  .face { padding: 30px 24px; }
+  .back h3 { font-size: 27px !important; margin-bottom: 14px !important; }
+  .back p { font-size: 20px !important; }
+  input { width: min(100%, 320px); }
+}
 </style>
 </head>
 <body>
 
-<h1>Таро Королевства RusLand</h1>
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="logo">RusLand V</a>
+    <div class="nav-links">
+      <a href="index.html">На главную</a>
+      <a href="guides.html">Гримуар</a>
+      <a href="destiny.html">Таро</a>
+    </div>
+  </div>
+</nav>
 
-<input type="text" id="nickname" placeholder="Введите никнейм">
-<br>
-<button onclick="drawCards()">Перемешать Колоду</button>
+<header class="hero">
+  <h1>Таро Королевства RusLand</h1>
+  <p class="subtitle">Арканы покажут направление пути. Введите ник, перемешайте колоду и откройте карты одним касанием.</p>
 
-<div class="cards" id="cards"></div>
+  <div class="controls">
+    <div class="input-wrap">
+      <label class="input-label" for="nickname">Имя героя</label>
+      <input type="text" id="nickname" placeholder="Введите никнейм">
+    </div>
+    <button class="cta" onclick="drawCards()">Перемешать Колоду</button>
+  </div>
+</header>
+
+<section class="section">
+  <div class="cards" id="cards"></div>
+</section>
+
+<footer>
+  © 2026 RUSLAND V СЕЗОН | Храм Судьбы
+</footer>
 
 <script>
 function hashString(str){
@@ -144,35 +302,35 @@ function hashString(str){
 
 const tarotDeck = [
 
-{title:"Император", 
+{title:"Император",
 upright:"Ты стремишься к структуре. Настало время навести порядок в своих владениях и укрепить основу.",
 reversed:"Контроль ускользает. Возможно, ты давишь слишком сильно или, наоборот, избегаешь ответственности."},
 
-{title:"Башня", 
+{title:"Башня",
 upright:"Старое должно разрушиться. Перемены неизбежны и принесут освобождение.",
 reversed:"Ты удерживаешь то, что уже потеряло смысл. Страх перемен тормозит развитие."},
 
-{title:"Колесо Судьбы", 
+{title:"Колесо Судьбы",
 upright:"Начинается новый цикл. Случай может сыграть в твою пользу.",
 reversed:"Повторяющийся сценарий. Возможно, ты не сделал выводов из прошлого."},
 
-{title:"Отшельник", 
+{title:"Отшельник",
 upright:"Пауза необходима. Внутренний поиск сейчас важнее внешнего шума.",
 reversed:"Изоляция становится бегством. Пора выйти к людям."},
 
-{title:"Сила", 
+{title:"Сила",
 upright:"Мягкая настойчивость принесёт результат. Терпение сильнее давления.",
 reversed:"Импульсивность мешает. Контроль над эмоциями сейчас критичен."},
 
-{title:"Суд", 
+{title:"Суд",
 upright:"Момент осознания. Ты видишь ситуацию яснее, чем раньше.",
 reversed:"Ты игнорируешь важный сигнал. Пришло время честно посмотреть на свои действия."},
 
-{title:"Маг", 
+{title:"Маг",
 upright:"У тебя есть ресурсы, чтобы реализовать задуманное.",
 reversed:"Потенциал есть, но он рассеивается из-за сомнений."},
 
-{title:"Звезда", 
+{title:"Звезда",
 upright:"Надежда оправдана. Продолжай движение — направление верное.",
 reversed:"Ты недооцениваешь себя. Не всё потеряно, даже если кажется иначе."}
 
