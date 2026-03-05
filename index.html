@@ -789,12 +789,50 @@ function submitPetition(event) {
 
 // Копирование IP
 function copyIP(){
-  navigator.clipboard.writeText("rusland5.sosal.today").then(() => {
+  const serverIP = "rusland5.sosal.today";
+  const notify = (message) => {
     const n = document.getElementById("notification");
-    n.innerText = "Свиток с адресом спрятан в вашу сумку";
+    n.innerText = message;
     n.classList.add("show");
-    setTimeout(() => n.classList.remove("show"), 3000);
-  });
+    setTimeout(() => n.classList.remove("show"), 4000);
+  };
+
+  const fallbackCopy = () => {
+    const textArea = document.createElement("textarea");
+    textArea.value = serverIP;
+    textArea.setAttribute("readonly", "");
+    textArea.style.position = "fixed";
+    textArea.style.left = "-9999px";
+    document.body.appendChild(textArea);
+    textArea.select();
+    textArea.setSelectionRange(0, textArea.value.length);
+    const copied = document.execCommand("copy");
+    document.body.removeChild(textArea);
+    return copied;
+  };
+
+  if (!navigator.clipboard || !navigator.clipboard.writeText) {
+    const copied = fallbackCopy();
+    if (copied) {
+      notify("Свиток с адресом спрятан в вашу сумку");
+    } else {
+      notify(`Не удалось скопировать автоматически. IP: ${serverIP}. Скопируйте вручную.`);
+    }
+    return;
+  }
+
+  navigator.clipboard.writeText(serverIP)
+    .then(() => {
+      notify("Свиток с адресом спрятан в вашу сумку");
+    })
+    .catch(() => {
+      const copied = fallbackCopy();
+      if (copied) {
+        notify("Свиток с адресом спрятан в вашу сумку (через запасной ритуал)");
+      } else {
+        notify(`Не удалось скопировать автоматически. IP: ${serverIP}. Скопируйте вручную.`);
+      }
+    });
 }
 
 // Плавное появление элементов
