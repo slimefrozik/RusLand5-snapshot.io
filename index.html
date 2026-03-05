@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="RusLand V — сервер с лором, правилами, гайдами и подачей заявки на whitelist.">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>RusLand V -- Эпоха Истинного Выживания</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -172,6 +174,8 @@
     }
 
     .ip-box {
+      appearance: none;
+      -webkit-appearance: none;
       margin: 20px auto 10px auto;
       padding: 25px 50px;
       background: rgba(20, 15, 12, 0.7);
@@ -205,6 +209,12 @@
       box-shadow: 0 0 40px rgba(201, 168, 113, 0.2), inset 0 0 30px rgba(201, 168, 113, 0.15);
       transform: scale(1.02);
       text-shadow: 0 0 10px #c9a871;
+    }
+
+    .ip-box:focus-visible {
+      outline: 2px solid #c9a871;
+      outline-offset: 3px;
+      box-shadow: 0 0 0 3px rgba(201, 168, 113, 0.2);
     }
     
     .ip-box:hover::before { opacity: 1; transform: scale(1); }
@@ -305,7 +315,7 @@
     }
 
     .section h2::after {
-      content: '✦';
+      content: '';
       display: block;
       font-size: 20px;
       color: #5a4634;
@@ -521,13 +531,34 @@
       z-index: 1000;
       box-shadow: 0 10px 30px rgba(0,0,0,0.9), 0 0 20px rgba(201, 168, 113, 0.2);
       text-align: center;
-      white-space: nowrap;
+      white-space: normal;
+      max-width: min(92vw, 560px);
     }
 
     .notification.show { 
       opacity: 1; 
       visibility: visible;
       transform: translateX(-50%) translateY(0);
+    }
+
+    .music-toggle {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 1100;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 1px solid rgba(201, 168, 113, 0.6);
+      background: rgba(20, 15, 12, 0.9);
+      color: #e8dcc4;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .music-toggle:hover {
+      border-color: #c9a871;
+      box-shadow: 0 0 12px rgba(201, 168, 113, 0.45);
     }
 
     .reveal {
@@ -537,6 +568,33 @@
     }
 
     .reveal.active { opacity: 1; transform: translateY(0); }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .reveal {
+        opacity: 1;
+        transform: none;
+      }
+      #particles {
+        display: none;
+      }
+    }
 
     @media(max-width: 768px) {
       .section { padding: 80px 20px; }
@@ -592,12 +650,12 @@
     <h1>Королевство RusLand</h1>
     <p class="subtitle">Эпоха Восхождения Новых Героев</p>
 
-    <div class="ip-box" onclick="copyIP()">
+    <button class="ip-box" id="copy-ip-btn" type="button" aria-describedby="copy-ip-hint">
       rusland5.sosal.today
-      <span>Оставьте след в истории (Нажмите для копирования)</span>
-    </div>
+      <span id="copy-ip-hint">Оставьте след в истории (Нажмите для копирования)</span>
+    </button>
     
-    <div class="status-box" id="server-status">
+    <div class="status-box" id="server-status" aria-live="polite">
       <span class="indicator"></span> Опрос магических сфер...
     </div>
 
@@ -629,32 +687,32 @@
 
     <div class="patch-grid">
       <div class="patch-card tilt-card">
-        <h3>🐎 Тренированные Скакуны</h3>
+        <h3> Тренированные Скакуны</h3>
         <p>Люди летать не вольы. Конь - ваш верный друг на просторах RusLand. Доводите лошадей до совершенства скача на них каждый день.</p>
       </div>
 
       <div class="patch-card tilt-card">
-        <h3>🛣 Свободные Тракты</h3>
+        <h3> Свободные Тракты</h3>
         <p>Указом Его Княжиего Величия каждому свободному дозволено строить тракты. Тракты сии дадут прудкость вашим коням и вашим ногам.</p>
       </div>
       
       <div class="patch-card tilt-card">
-        <h3>⚖️ Аукцион Его Княжиего Величия </h3>
+        <h3> Аукцион Его Княжиего Величия </h3>
         <p>Указом его Княжиего Величия все рынки были упразднены и заменены Аукционом. Каждый свободный людин может торговать чем ему угодно. Основной величиной будет ныне алмазы земные.</p>
 		</div>
 
       <div class="patch-card tilt-card">
-        <h3>❤️ Истощение духа</h3>
+        <h3> Истощение духа</h3>
         <p>На мир было наложено неизвстное проклятие. Максимальный запас духа живого всего теперь зависит от вашего расстояния от центра мира.</p>
       </div>
 
       <div class="patch-card tilt-card">
-        <h3>📦 Пленение душ (NPC)</h3>
+        <h3> Пленение душ (NPC)</h3>
         <p>Темная магия [Ctrl + ПКМ] позволяет обращать крестьян в предметы. Указом Его Княжиего Величия дозволена торговля сиими несвободными, али пользование для любых своих дел.</p>
       </div>
 	  
 	  <div class="patch-card tilt-card">
-        <h3>🧭 Бессонные земли</h3>
+        <h3> Бессонные земли</h3>
         <p>Определённые регионы больше не засыпают. Производственные цепочки, фермы и механизмы продолжают работу независимо от присутствия людин свободных. /clu</p>
       </div>
     </div>
@@ -683,25 +741,25 @@
     <h2>Врата Королевства</h2>
     <p class="big-text">Земли закрыты для чужаков. Оставьте свою петицию страже, чтобы получить пропуск на земли Короны.</p>
     
-    <form class="application-form" onsubmit="submitPetition(event)">
+    <form class="application-form" id="application-form" novalidate>
       <div class="form-group">
         <label for="pet-name">Имя (Игровой Никнейм)</label>
-        <input type="text" id="pet-name" placeholder="Например: Сэр Галахад" required>
+        <input type="text" id="pet-name" minlength="2" maxlength="32" autocomplete="nickname" placeholder="Например: Сэр Галахад" required>
       </div>
       
       <div class="form-group">
         <label for="pet-age">Количество прожитых зим (Возраст)</label>
-        <input type="number" id="pet-age" placeholder="Сколько вам лет?" required>
+        <input type="number" id="pet-age" min="10" max="99" inputmode="numeric" placeholder="Сколько вам лет?" required>
       </div>
       
       <div class="form-group">
         <label for="pet-role">Желаемое Ремесло</label>
-        <input type="text" id="pet-role" placeholder="Фермер, воин, зодчий..." required>
+        <input type="text" id="pet-role" minlength="2" maxlength="40" placeholder="Фермер, воин, зодчий..." required>
       </div>
 
       <div class="form-group">
         <label for="pet-why">Почему вы ищете убежища в RusLand?</label>
-        <textarea id="pet-why" placeholder="Поведайте нам свою историю..." required></textarea>
+        <textarea id="pet-why" minlength="20" maxlength="500" placeholder="Поведайте нам свою историю..." required></textarea>
       </div>
 
       <button type="submit" class="cta tg-btn" style="width: 100%;">
@@ -715,92 +773,157 @@
   © 2026 RUSLAND V СЕЗОН
 </footer>
 
-<div class="notification" id="notification">Свиток с адресом спрятан в вашу сумку</div>
+<div class="notification" id="notification" role="status" aria-live="polite">Свиток с адресом спрятан в вашу сумку</div>
+<audio id="bg-music" src="music.mp3" loop preload="none"></audio>
+<button id="music-toggle" class="music-toggle" type="button" aria-label="Включить музыку" title="Музыка">🔇</button>
 
 <script>
-// Опрос магических сфер (Онлайн сервера)
-async function fetchServerStatus() {
-  const statusEl = document.getElementById('server-status');
-  const ip = 'rusland5.sosal.today';
-  
-  try {
-    const response = await fetch(`https://api.mcsrvstat.us/2/${ip}`);
-    const data = await response.json();
-    
-    if (data.online) {
-      statusEl.innerHTML = `<span class="indicator"></span> Живых душ в мире: <span class="online-count">${data.players.online}</span> из ${data.players.max}`;
-    } else {
-      statusEl.innerHTML = `<span class="indicator" style="background:#8b0000; box-shadow: 0 0 10px #8b0000;"></span> Королевство погрузилось в сон (Оффлайн)`;
-    }
-  } catch (error) {
-    statusEl.innerHTML = `Туман скрывает земли (Не удалось узнать статус)`;
+const notificationEl = document.getElementById("notification");
+const serverIp = "rusland5.sosal.today";
+const statusEl = document.getElementById("server-status");
+const petitionForm = document.getElementById("application-form");
+const copyIpBtn = document.getElementById("copy-ip-btn");
+const musicEl = document.getElementById("bg-music");
+const musicToggle = document.getElementById("music-toggle");
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function showNotification(message, durationMs = 4000) {
+  notificationEl.innerText = message;
+  notificationEl.classList.add("show");
+  window.setTimeout(() => notificationEl.classList.remove("show"), durationMs);
+}
+
+function setStatusContent({ online, text, count, max }) {
+  statusEl.textContent = "";
+  const indicator = document.createElement("span");
+  indicator.className = "indicator";
+  if (!online) {
+    indicator.style.background = "#8b0000";
+    indicator.style.boxShadow = "0 0 10px #8b0000";
+  }
+  statusEl.appendChild(indicator);
+  statusEl.append(" ");
+  statusEl.append(text);
+
+  if (Number.isFinite(count) && Number.isFinite(max)) {
+    const countNode = document.createElement("span");
+    countNode.className = "online-count";
+    countNode.textContent = String(count);
+    statusEl.append(" ");
+    statusEl.appendChild(countNode);
+    statusEl.append(` из ${max}`);
   }
 }
 
-// Запускаем сразу и обновляем раз в минуту
-fetchServerStatus();
-setInterval(fetchServerStatus, 60000);
+async function fetchServerStatus() {
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), 8000);
+  try {
+    const response = await fetch(`https://api.mcsrvstat.us/2/${encodeURIComponent(serverIp)}`, {
+      signal: controller.signal,
+      cache: "no-store"
+    });
+    if (!response.ok) {
+      throw new Error(`Bad status: ${response.status}`);
+    }
 
-// Мобильное меню
-const menuToggle = document.querySelector('.menu-toggle');
-const navLinks = document.getElementById('primary-navigation');
+    const data = await response.json();
+    const onlineCount = Number(data?.players?.online);
+    const maxCount = Number(data?.players?.max);
+
+    if (data?.online === true && Number.isFinite(onlineCount) && Number.isFinite(maxCount)) {
+      setStatusContent({
+        online: true,
+        text: "Живых душ в мире:",
+        count: onlineCount,
+        max: maxCount
+      });
+      return;
+    }
+
+    setStatusContent({
+      online: false,
+      text: "Королевство погрузилось в сон (Оффлайн)"
+    });
+  } catch (error) {
+    setStatusContent({
+      online: false,
+      text: "Туман скрывает земли (Не удалось узнать статус)"
+    });
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
+}
+
+fetchServerStatus();
+const statusInterval = window.setInterval(fetchServerStatus, 60000);
+window.addEventListener("beforeunload", () => window.clearInterval(statusInterval));
+
+const menuToggle = document.querySelector(".menu-toggle");
+const navLinks = document.getElementById("primary-navigation");
 
 if (menuToggle && navLinks) {
-  menuToggle.addEventListener('click', () => {
-    const isOpen = navLinks.classList.toggle('is-open');
-    menuToggle.setAttribute('aria-expanded', String(isOpen));
+  menuToggle.addEventListener("click", () => {
+    const isOpen = navLinks.classList.toggle("is-open");
+    menuToggle.setAttribute("aria-expanded", String(isOpen));
   });
 
-  navLinks.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-      navLinks.classList.remove('is-open');
-      menuToggle.setAttribute('aria-expanded', 'false');
+  navLinks.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", () => {
+      navLinks.classList.remove("is-open");
+      menuToggle.setAttribute("aria-expanded", "false");
     });
   });
 }
 
-// Отправка петиции
-function submitPetition(event) {
-  event.preventDefault(); 
-  
-  const name = document.getElementById('pet-name').value;
-  const age = document.getElementById('pet-age').value;
-  const role = document.getElementById('pet-role').value;
-  const why = document.getElementById('pet-why').value;
-
-  const petitionText = `📜 *ПЕТИЦИЯ В КОРОЛЕВСТВО RUSLAND* 📜\n\n` +
-                       `👤 Никнейм: ${name}\n` +
-                       `⏳ Возраст: ${age}\n` +
-                       `⚔️ Ремесло: ${role}\n` +
-                       `📖 О себе: ${why}`;
-
-  // Кодируем текст для безопасной передачи в ссылке
-  const encodedText = encodeURIComponent(petitionText);
-  
-  const n = document.getElementById("notification");
-  n.innerText = "Призываем ворона в Telegram...";
-  n.classList.add("show");
-  
-  setTimeout(() => {
-    n.classList.remove("show");
-    // Открываем ТГ сразу с вставленным текстом!
-    window.open(`https://t.me/slimefrozik?text=${encodedText}`, "_blank");
-  }, 1500);
+function sanitizeField(value, maxLength) {
+  return String(value || "").trim().replace(/\s+/g, " ").slice(0, maxLength);
 }
 
-// Копирование IP
-function copyIP(){
-  const serverIP = "rusland5.sosal.today";
-  const notify = (message) => {
-    const n = document.getElementById("notification");
-    n.innerText = message;
-    n.classList.add("show");
-    setTimeout(() => n.classList.remove("show"), 4000);
-  };
+function submitPetition(event) {
+  event.preventDefault();
 
+  if (!petitionForm.checkValidity()) {
+    petitionForm.reportValidity();
+    showNotification("Проверьте анкету: некоторые поля заполнены неверно.");
+    return;
+  }
+
+  const name = sanitizeField(document.getElementById("pet-name").value, 32);
+  const age = Number(document.getElementById("pet-age").value);
+  const role = sanitizeField(document.getElementById("pet-role").value, 40);
+  const why = sanitizeField(document.getElementById("pet-why").value, 500);
+
+  if (!Number.isInteger(age) || age < 10 || age > 99) {
+    showNotification("Возраст должен быть от 10 до 99.");
+    return;
+  }
+
+  const petitionText = ` *ПЕТИЦИЯ В КОРОЛЕВСТВО RUSLAND* \n\n` +
+                       ` Никнейм: ${name}\n` +
+                       ` Возраст: ${age}\n` +
+                       ` Ремесло: ${role}\n` +
+                       ` О себе: ${why}`;
+
+  const query = new URLSearchParams({ text: petitionText });
+  const tgUrl = `https://t.me/slimefrozik?${query.toString()}`;
+  showNotification("Призываем ворона в Telegram...", 1600);
+
+  setTimeout(() => {
+    const tgWindow = window.open(tgUrl, "_blank", "noopener,noreferrer");
+    if (tgWindow) {
+      tgWindow.opener = null;
+    } else {
+      showNotification("Браузер блокирует всплывающее окно. Откройте Telegram вручную.");
+    }
+  }, 1500);
+}
+petitionForm.addEventListener("submit", submitPetition);
+
+function copyIP() {
   const fallbackCopy = () => {
     const textArea = document.createElement("textarea");
-    textArea.value = serverIP;
+    textArea.value = serverIp;
     textArea.setAttribute("readonly", "");
     textArea.style.position = "fixed";
     textArea.style.left = "-9999px";
@@ -815,32 +938,53 @@ function copyIP(){
   if (!navigator.clipboard || !navigator.clipboard.writeText) {
     const copied = fallbackCopy();
     if (copied) {
-      notify("Свиток с адресом спрятан в вашу сумку");
+      showNotification("Свиток с адресом спрятан в вашу сумку");
     } else {
-      notify(`Не удалось скопировать автоматически. IP: ${serverIP}. Скопируйте вручную.`);
+      showNotification(`Не удалось скопировать автоматически. IP: ${serverIp}. Скопируйте вручную.`);
     }
     return;
   }
 
-  navigator.clipboard.writeText(serverIP)
+  navigator.clipboard.writeText(serverIp)
     .then(() => {
-      notify("Свиток с адресом спрятан в вашу сумку");
+      showNotification("Свиток с адресом спрятан в вашу сумку");
     })
     .catch(() => {
       const copied = fallbackCopy();
       if (copied) {
-        notify("Свиток с адресом спрятан в вашу сумку (через запасной ритуал)");
+        showNotification("Свиток с адресом спрятан в вашу сумку (через запасной ритуал)");
       } else {
-        notify(`Не удалось скопировать автоматически. IP: ${serverIP}. Скопируйте вручную.`);
+        showNotification(`Не удалось скопировать автоматически. IP: ${serverIp}. Скопируйте вручную.`);
       }
     });
 }
+copyIpBtn.addEventListener("click", copyIP);
 
-// Плавное появление элементов
+let isMusicOn = false;
+if (musicToggle && musicEl) {
+  musicToggle.addEventListener("click", async () => {
+    try {
+      if (!isMusicOn) {
+        await musicEl.play();
+        isMusicOn = true;
+        musicToggle.textContent = "🔊";
+        musicToggle.setAttribute("aria-label", "Выключить музыку");
+      } else {
+        musicEl.pause();
+        isMusicOn = false;
+        musicToggle.textContent = "🔇";
+        musicToggle.setAttribute("aria-label", "Включить музыку");
+      }
+    } catch (e) {
+      showNotification("Не удалось запустить музыку. Положите файл music.mp3 в корень сайта.");
+    }
+  });
+}
+
 const reveals = document.querySelectorAll(".reveal");
 function checkReveal() {
   reveals.forEach(el => {
-    if(el.getBoundingClientRect().top < window.innerHeight - 150){
+    if (el.getBoundingClientRect().top < window.innerHeight - 150) {
       el.classList.add("active");
     }
   });
@@ -848,80 +992,99 @@ function checkReveal() {
 window.addEventListener("scroll", checkReveal);
 checkReveal();
 
-// Магия 3D Карточек
-const cards = document.querySelectorAll('.tilt-card');
-cards.forEach(card => {
-  card.addEventListener('mousemove', e => {
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left; 
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -10;
-    const rotateY = ((x - centerX) / centerX) * 10;
-    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+if (!reducedMotion) {
+  const cards = document.querySelectorAll(".tilt-card");
+  cards.forEach(card => {
+    card.addEventListener("mousemove", e => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = ((y - centerY) / centerY) * -10;
+      const rotateY = ((x - centerX) / centerX) * 10;
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+    });
+    card.addEventListener("mouseleave", () => {
+      card.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
+    });
   });
-  card.addEventListener('mouseleave', () => {
-    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-  });
-});
+}
 
-// Живой Огонь
 const canvas = document.getElementById("particles");
-const ctx = canvas.getContext("2d");
+const ctx = canvas ? canvas.getContext("2d") : null;
 
 function resizeCanvas() {
+  if (!canvas) return;
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 }
-window.addEventListener('resize', resizeCanvas);
+window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
 
 let particles = [];
-for(let i = 0; i < 100; i++){
-  particles.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    r: Math.random() * 2.5 + 0.5,
-    d: Math.random() * 2 + 0.5,
-    wind: Math.random() * 0.5 - 0.25,
-    o: Math.random() * 0.8 + 0.2,
-    blinkRate: Math.random() * 0.02 + 0.01
-  });
+if (canvas) {
+  for (let i = 0; i < 100; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 2.5 + 0.5,
+      d: Math.random() * 2 + 0.5,
+      wind: Math.random() * 0.5 - 0.25,
+      o: Math.random() * 0.8 + 0.2,
+      blinkRate: Math.random() * 0.02 + 0.01
+    });
+  }
 }
 
 let time = 0;
+let animationFrameId = null;
 
-function draw(){
+function draw() {
+  if (!ctx || !canvas) return;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   time += 0.01;
-  let globalWind = Math.sin(time) * 0.5;
+  const globalWind = Math.sin(time) * 0.5;
 
   particles.forEach(p => {
     ctx.shadowBlur = 15;
-    ctx.shadowColor = "rgba(255, 140, 0, 0.8)"; 
+    ctx.shadowColor = "rgba(255, 140, 0, 0.8)";
     p.o += Math.sin(time * 10 + p.blinkRate * 1000) * 0.01;
-    if(p.o > 1) p.o = 1;
-    if(p.o < 0.1) p.o = 0.1;
+    if (p.o > 1) p.o = 1;
+    if (p.o < 0.1) p.o = 0.1;
 
-    ctx.fillStyle = `rgba(255, ${150 + Math.random()*50}, 50, ${p.o})`;
+    ctx.fillStyle = `rgba(255, ${150 + Math.random() * 50}, 50, ${p.o})`;
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
     ctx.fill();
-    
+
     p.y -= p.d;
-    p.x += Math.sin(p.y * 0.05) * 0.5 + p.wind + globalWind; 
-    
-    if(p.y < -10){
+    p.x += Math.sin(p.y * 0.05) * 0.5 + p.wind + globalWind;
+
+    if (p.y < -10) {
       p.y = canvas.height + 10;
       p.x = Math.random() * canvas.width;
       p.o = 0;
     }
-    ctx.shadowBlur = 0; 
+    ctx.shadowBlur = 0;
   });
-  requestAnimationFrame(draw);
+
+  animationFrameId = requestAnimationFrame(draw);
 }
-requestAnimationFrame(draw);
+
+if (!reducedMotion && canvas && ctx) {
+  animationFrameId = requestAnimationFrame(draw);
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden && animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
+    } else if (!document.hidden && !animationFrameId) {
+      animationFrameId = requestAnimationFrame(draw);
+    }
+  });
+}
 </script>
 </body>
 </html>
+
+
