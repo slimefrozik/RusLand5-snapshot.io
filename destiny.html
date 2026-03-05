@@ -90,6 +90,26 @@ h1, h2, h3, .logo, .nav-links a, .cta, .input-label {
 }
 .nav-links a:hover { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
 
+.menu-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border: 1px solid rgba(201, 168, 113, 0.5);
+  background: rgba(21, 16, 12, 0.75);
+  color: var(--accent);
+  font-family: 'Cinzel', serif;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.menu-toggle:focus-visible {
+  outline: 2px solid rgba(201, 168, 113, 0.85);
+  outline-offset: 2px;
+}
+
 .hero {
   padding: 180px 20px 80px;
   text-align: center;
@@ -239,7 +259,24 @@ footer {
 ::selection { background: rgba(139, 0, 0, 0.8); color: var(--accent); }
 
 @media (max-width: 768px) {
-  .nav-links { display: none; }
+  .menu-toggle { display: inline-flex; }
+  .nav-container {
+    flex-wrap: wrap;
+    row-gap: 12px;
+  }
+  .nav-links {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 12px 0 4px;
+  }
+  .nav-links.is-open { display: flex; }
+  .nav-links a {
+    margin-left: 0;
+    font-size: 14px;
+  }
   .hero { padding: 140px 20px 60px; }
   .hero h1 { letter-spacing: 3px; }
   .subtitle { font-size: 19px; margin-bottom: 34px; }
@@ -261,7 +298,8 @@ footer {
 <nav class="navbar">
   <div class="nav-container">
     <a href="index.html" class="logo">RusLand V</a>
-    <div class="nav-links">
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation">Меню</button>
+    <div class="nav-links" id="primary-navigation">
       <a href="index.html">На главную</a>
       <a href="guides.html">Гримуар</a>
       <a href="destiny.html">Таро</a>
@@ -425,6 +463,23 @@ function drawCards(){
   });
 
   container.appendChild(fateCard);
+}
+
+const menuToggle = document.querySelector('.menu-toggle');
+const navLinks = document.getElementById('primary-navigation');
+
+if (menuToggle && navLinks) {
+  menuToggle.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('is-open');
+    menuToggle.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('is-open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+    });
+  });
 }
 </script>
 
