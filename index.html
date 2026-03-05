@@ -96,6 +96,32 @@
     .nav-links a:hover { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
     .nav-links a:hover::after { width: 100%; }
 
+    .menu-toggle {
+      display: none;
+      border: 1px solid rgba(201, 168, 113, 0.6);
+      background: rgba(20, 15, 12, 0.75);
+      color: #c9a871;
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .menu-toggle:hover {
+      color: #fff;
+      border-color: #c9a871;
+      box-shadow: 0 0 12px rgba(201, 168, 113, 0.45);
+    }
+
+    .menu-toggle:focus-visible {
+      outline: 2px solid #c9a871;
+      outline-offset: 2px;
+      box-shadow: 0 0 0 3px rgba(201, 168, 113, 0.25);
+    }
+
     .hero {
       height: 100vh;
       display: flex;
@@ -514,7 +540,24 @@
 
     @media(max-width: 768px) {
       .section { padding: 80px 20px; }
-      .nav-links { display: none; }
+      .menu-toggle { display: inline-flex; }
+      .nav-container {
+        flex-wrap: wrap;
+        row-gap: 12px;
+      }
+      .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+        padding: 12px 0 4px;
+      }
+      .nav-links.is-open { display: flex; }
+      .nav-links a {
+        margin-left: 0;
+        font-size: 14px;
+      }
       .hero h1 { font-size: 38px; }
       .ip-box { font-size: 18px; padding: 20px; }
       .application-form { padding: 20px; }
@@ -531,7 +574,8 @@
 <nav class="navbar">
   <div class="nav-container">
     <div class="logo">RusLand V</div>
-    <div class="nav-links">
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation">Меню</button>
+    <div class="nav-links" id="primary-navigation">
       <a href="#about">Наставление</a>
       <a href="#patchnotes">Правда</a>
       <a href="#media">Галерея</a>
@@ -695,6 +739,24 @@ async function fetchServerStatus() {
 // Запускаем сразу и обновляем раз в минуту
 fetchServerStatus();
 setInterval(fetchServerStatus, 60000);
+
+// Мобильное меню
+const menuToggle = document.querySelector('.menu-toggle');
+const navLinks = document.getElementById('primary-navigation');
+
+if (menuToggle && navLinks) {
+  menuToggle.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('is-open');
+    menuToggle.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('is-open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+}
 
 // Отправка петиции
 function submitPetition(event) {
