@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Таро RusLand — Расклад Судьбы</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  background:#0c0a09;
+  color:#d4c4b7;
+  font-family:'Cormorant Garamond',serif;
+  text-align:center;
+  padding:120px 20px;
+}
+
+h1{
+  font-family:'Cinzel',serif;
+  font-size:50px;
+  color:#c9a871;
+  margin-bottom:40px;
+  letter-spacing:4px;
+}
+
+input{
+  padding:15px;
+  width:280px;
+  background:#15100c;
+  border:1px solid rgba(201,168,113,0.4);
+  color:white;
+  font-size:18px;
+  text-align:center;
+}
+
+button{
+  margin-top:20px;
+  padding:15px 40px;
+  background:linear-gradient(135deg,#2a1f18,#15100c);
+  border:1px solid #c9a871;
+  color:#c9a871;
+  font-family:'Cinzel',serif;
+  cursor:pointer;
+  transition:.4s;
+}
+button:hover{
+  background:#c9a871;
+  color:#0c0a09;
+}
+
+.cards{
+  margin-top:90px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:40px;
+  max-width:1200px;
+  margin-left:auto;
+  margin-right:auto;
+  perspective:1200px;
+}
+
+.card{
+  position:relative;
+  height:360px;
+  transform-style:preserve-3d;
+  transition:transform 1s;
+  cursor:pointer;
+}
+
+.card.flip{
+  transform:rotateY(180deg);
+}
+
+.face{
+  position:absolute;
+  width:100%;
+  height:100%;
+  backface-visibility:hidden;
+  padding:40px 30px;
+  border:1px solid rgba(201,168,113,0.3);
+  background:rgba(20,15,12,0.7);
+  backdrop-filter:blur(10px);
+  box-shadow:0 20px 40px rgba(0,0,0,.9);
+}
+
+.front{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:'Cinzel',serif;
+  font-size:24px;
+  color:#c9a871;
+  letter-spacing:2px;
+}
+
+.back{
+  transform:rotateY(180deg);
+  text-align:left;
+}
+
+.back h3{
+  font-family:'Cinzel',serif;
+  margin-bottom:15px;
+  color:#e8dcc4;
+}
+
+.back p{
+  line-height:1.6;
+  color:#a89f91;
+}
+
+.rarity{
+  font-size:12px;
+  margin-top:10px;
+  letter-spacing:2px;
+}
+
+.common{color:#777}
+.rare{color:#c9a871}
+.legendary{color:#ff4500}
+</style>
+</head>
+<body>
+
+<h1>Таро Королевства RusLand</h1>
+
+<input type="text" id="nickname" placeholder="Введите никнейм">
+<br>
+<button onclick="drawCards()">Перемешать Колоду</button>
+
+<div class="cards" id="cards"></div>
+
+<script>
+function hashString(str){
+  let hash=0;
+  for(let i=0;i<str.length;i++){
+    hash=((hash<<5)-hash)+str.charCodeAt(i);
+    hash|=0;
+  }
+  return Math.abs(hash);
+}
+
+const tarotDeck = [
+
+{title:"Император", 
+upright:"Ты стремишься к структуре. Настало время навести порядок в своих владениях и укрепить основу.",
+reversed:"Контроль ускользает. Возможно, ты давишь слишком сильно или, наоборот, избегаешь ответственности."},
+
+{title:"Башня", 
+upright:"Старое должно разрушиться. Перемены неизбежны и принесут освобождение.",
+reversed:"Ты удерживаешь то, что уже потеряло смысл. Страх перемен тормозит развитие."},
+
+{title:"Колесо Судьбы", 
+upright:"Начинается новый цикл. Случай может сыграть в твою пользу.",
+reversed:"Повторяющийся сценарий. Возможно, ты не сделал выводов из прошлого."},
+
+{title:"Отшельник", 
+upright:"Пауза необходима. Внутренний поиск сейчас важнее внешнего шума.",
+reversed:"Изоляция становится бегством. Пора выйти к людям."},
+
+{title:"Сила", 
+upright:"Мягкая настойчивость принесёт результат. Терпение сильнее давления.",
+reversed:"Импульсивность мешает. Контроль над эмоциями сейчас критичен."},
+
+{title:"Суд", 
+upright:"Момент осознания. Ты видишь ситуацию яснее, чем раньше.",
+reversed:"Ты игнорируешь важный сигнал. Пришло время честно посмотреть на свои действия."},
+
+{title:"Маг", 
+upright:"У тебя есть ресурсы, чтобы реализовать задуманное.",
+reversed:"Потенциал есть, но он рассеивается из-за сомнений."},
+
+{title:"Звезда", 
+upright:"Надежда оправдана. Продолжай движение — направление верное.",
+reversed:"Ты недооцениваешь себя. Не всё потеряно, даже если кажется иначе."}
+
+];
+
+const pathCards = [
+"Твой путь сейчас лежит через взаимодействие с другими.",
+"Твой путь сейчас — постепенное укрепление базы.",
+"Твой путь — исследование неизведанного.",
+"Твой путь — завершение старых дел.",
+"Твой путь — создание чего-то символического."
+];
+
+function drawCards(){
+  const name=document.getElementById("nickname").value.trim();
+  if(!name)return;
+
+  const seed=hashString(name);
+  const container=document.getElementById("cards");
+  container.innerHTML="";
+
+  let used=new Set();
+  let index=seed%tarotDeck.length;
+  let chosen=[];
+
+  while(chosen.length<3){
+    if(!used.has(index)){
+      chosen.push(tarotDeck[index]);
+      used.add(index);
+    }
+    index=(index+5)%tarotDeck.length;
+  }
+
+  chosen.forEach((cardData,i)=>{
+    const reversed = ((seed >> i) % 2) === 1;
+    const text = reversed ? cardData.reversed : cardData.upright;
+
+    const card=document.createElement("div");
+    card.className="card";
+
+    const front=document.createElement("div");
+    front.className="face front";
+    front.style.background="linear-gradient(135deg,#1b1410,#120e0b)";
+    front.style.border="1px solid rgba(201,168,113,0.4)";
+
+    const back=document.createElement("div");
+    back.className="face back";
+    back.innerHTML=`
+      <h3 style="font-size:32px;margin-bottom:20px;">
+        ${cardData.title} ${reversed ? " (Перевёрнутая)" : ""}
+      </h3>
+      <p style="font-size:22px;line-height:1.6;">
+        ${text}
+      </p>
+    `;
+
+    card.appendChild(front);
+    card.appendChild(back);
+
+    card.addEventListener("click",()=>{
+      card.classList.toggle("flip");
+    });
+
+    container.appendChild(card);
+  });
+
+  const path = pathCards[(seed>>3)%pathCards.length];
+
+  const fateCard=document.createElement("div");
+  fateCard.className="card";
+
+  const front=document.createElement("div");
+  front.className="face front";
+  front.style.background="linear-gradient(135deg,#1b1410,#120e0b)";
+
+  const back=document.createElement("div");
+  back.className="face back";
+  back.innerHTML=`
+    <h3 style="font-size:32px;margin-bottom:20px;">
+      Карта Пути
+    </h3>
+    <p style="font-size:22px;line-height:1.6;">
+      ${path}
+    </p>
+  `;
+
+  fateCard.appendChild(front);
+  fateCard.appendChild(back);
+
+  fateCard.addEventListener("click",()=>{
+    fateCard.classList.toggle("flip");
+  });
+
+  container.appendChild(fateCard);
+}
+</script>
+
+</body>
+</html>

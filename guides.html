@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Гримуар и Летописи -- RusLand V</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: #0f0d0c; }
+    ::-webkit-scrollbar-thumb { 
+      background: linear-gradient(to bottom, #3a2c22, #c9a871, #3a2c22); 
+      border-radius: 5px; 
+      border: 1px solid #1a1512;
+    }
+
+    body {
+      background-color: #0c0a09;
+      background-image: 
+        radial-gradient(circle at top center, rgba(36, 26, 20, 0.8) 0%, #0c0a09 100%),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+      color: #d4c4b7;
+      font-family: 'Cormorant Garamond', serif;
+      overflow-x: hidden;
+      font-size: 18px;
+    }
+
+    h1, h2, h3, .logo, .nav-links a, .cta, .calc-title {
+      font-family: 'Cinzel', serif;
+    }
+
+    .navbar {
+      position:fixed;
+      width:100%;
+      background: rgba(12, 10, 9, 0.6);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(201, 168, 113, 0.2);
+      padding: 15px 0;
+      z-index: 100;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    }
+
+    .nav-container {
+      max-width:1200px;
+      margin:auto;
+      display:flex;
+      justify-content:space-between;
+      align-items: center;
+      padding:0 20px;
+    }
+
+    .logo {
+      font-weight: 900;
+      font-size: 24px;
+      color: #c9a871;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-decoration: none;
+    }
+
+    .nav-links a {
+      margin-left: 35px;
+      color: #a89f91;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: 0.3s;
+    }
+    .nav-links a:hover { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+
+    .hero {
+      padding: 180px 20px 100px;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero h1 {
+      font-size: clamp(40px, 6vw, 80px);
+      font-weight: 900;
+      background: linear-gradient(to bottom, #fff, #c9a871, #8b5a2b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      margin-bottom: 20px;
+    }
+
+    .subtitle {
+      font-size: 22px;
+      color: #a89f91;
+      letter-spacing: 3px;
+      font-style: italic;
+    }
+
+    .section {
+      padding: 100px 20px;
+      max-width: 1200px;
+      margin: auto;
+      position: relative;
+    }
+
+    .section h2 {
+      font-size: 40px;
+      color: #c9a871;
+      text-align: center;
+      margin-bottom: 50px;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      text-shadow: 0 0 15px rgba(201, 168, 113, 0.3);
+    }
+    .section h2::after {
+      content: '✦';
+      display: block;
+      font-size: 20px;
+      color: #5a4634;
+      margin-top: 15px;
+    }
+
+    .dark { 
+      background: linear-gradient(to bottom, #0c0a09, #16120e, #0c0a09);
+      border-top: 1px solid rgba(201, 168, 113, 0.1); 
+      border-bottom: 1px solid rgba(201, 168, 113, 0.1);
+      box-shadow: inset 0 20px 50px rgba(0,0,0,0.8), inset 0 -20px 50px rgba(0,0,0,0.8);
+    }
+
+    /* Grid layout для карточек */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+    }
+
+    .card {
+      padding: 40px 30px;
+      background: rgba(20, 15, 12, 0.6);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(201, 168, 113, 0.15);
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    .card:hover {
+      background: rgba(26, 20, 16, 0.8);
+      border-color: rgba(201, 168, 113, 0.6);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.9), 0 0 20px rgba(201, 168, 113, 0.1);
+      transform: translateY(-5px);
+    }
+    .card h3 {
+      font-size: 22px;
+      margin-bottom: 15px;
+      color: #e8dcc4;
+    }
+    .card p { line-height: 1.6; color: #a89f91; }
+
+    /* Калькулятор Порталов */
+    .calculator-box {
+      background: rgba(15, 12, 10, 0.8);
+      border: 1px solid #c9a871;
+      padding: 40px;
+      max-width: 800px;
+      margin: 0 auto;
+      box-shadow: inset 0 0 50px rgba(0,0,0,0.8), 0 10px 30px rgba(0,0,0,0.9);
+      text-align: center;
+      position: relative;
+    }
+    .calc-row {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-top: 30px;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .calc-col {
+      flex: 1;
+      min-width: 250px;
+      background: #080605;
+      padding: 20px;
+      border: 1px solid rgba(201, 168, 113, 0.3);
+    }
+    .calc-col h4 {
+      color: #c9a871;
+      font-family: 'Cinzel', serif;
+      margin-bottom: 15px;
+      font-size: 20px;
+    }
+    .coord-inputs { display: flex; gap: 10px; justify-content: center; }
+    .coord-inputs input {
+      width: 80px;
+      background: rgba(20, 15, 12, 1);
+      border: 1px solid #5a4634;
+      color: #fff;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 18px;
+      text-align: center;
+      transition: 0.3s;
+    }
+    .coord-inputs input:focus { border-color: #c9a871; outline: none; }
+    
+    .calc-arrow { font-size: 30px; color: #8b0000; font-weight: bold; }
+
+    /* Ссылки-артефакты */
+    .link-list { list-style: none; }
+    .link-list li { margin-bottom: 15px; border-bottom: 1px dashed rgba(201,168,113,0.2); padding-bottom: 10px;}
+    .link-list a {
+      color: #c9a871;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 20px;
+      transition: 0.3s;
+      display: flex;
+      align-items: center;
+    }
+    .link-list a:hover { color: #fff; text-shadow: 0 0 10px #c9a871; }
+    .link-list span { display: block; color: #a89f91; font-size: 16px; margin-top: 5px; font-weight: normal; }
+
+    /* Летопись / Лор */
+    .lore-timeline {
+      border-left: 2px solid #5a4634;
+      padding-left: 30px;
+      margin-left: 20px;
+    }
+    .lore-item { margin-bottom: 40px; position: relative; }
+    .lore-item::before {
+      content: '';
+      position: absolute;
+      left: -39px; top: 5px;
+      width: 16px; height: 16px;
+      background: #0c0a09;
+      border: 2px solid #c9a871;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #c9a871;
+    }
+    .lore-item h3 { color: #8b5a2b; font-size: 26px; margin-bottom: 10px; }
+    
+    footer { text-align: center; padding: 50px; font-family: 'Cinzel', serif; color: #5a4634; font-size: 14px; background: #080605; border-top: 1px solid #1a1512; }
+
+    ::selection { background: rgba(139, 0, 0, 0.8); color: #c9a871; }
+    
+    #particles {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -1;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="logo">RusLand V</a>
+    <div class="nav-links">
+      <a href="index.html">На Главную</a>
+      <a href="#lore">Летопись</a>
+      <a href="#astrolabe">Астролябия Врат</a>
+      <a href="#builder">Трактаты Зодчих</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <h1>Гримуар и Летописи</h1>
+  <p class="subtitle">Знания — единственное оружие, не тупящееся о камень</p>
+</header>
+
+<section class="section" id="lore">
+  <h2>Летопись Минувших Эпох</h2>
+  <div class="lore-timeline">
+    <div class="lore-item">
+      <h3>Эпоха I: Зарождение</h3>
+      <p>Мир был юн и хаотичен. Первые людины ступили на земли, не зная законов и границ. Это было время великих открытий, кровавых стычек за кусок хлеба и строительства первых земляных крепостей, которые ныне обратились в прах.</p>
+    </div>
+    <div class="lore-item">
+      <h3>Эпоха II: Великий Раскол</h3>
+      <p>Когда ресурсов стало меньше, а амбиций больше, мир разделился. Образовались первые фракции и гильдии. Звенящие клинки и пылающие леса ознаменовали эту эпоху. Впервые был написан свод правил, дабы остановить безумие.</p>
+    </div>
+    <div class="lore-item">
+      <h3>Эпоха III: Золотой Век Торговли</h3>
+      <p>Мир устал от войн. Мечи перековали на кирки. По всей земле пролегли грандиозные тракты, соединяющие величественные города. Рынки ломились от товаров, а архитекторы возводили чудеса света, бросающие вызов самим богам.</p>
+    </div>
+    <div class="lore-item">
+      <h3>Эпоха IV: Катаклизм Пустоты</h3>
+      <p>Жадность погубила Золотой Век. Маги зашли слишком далеко в своих экспериментах с Эндер-миром, что привело к искажению пространства. Мир начал рушиться, вынудив выживших бежать через порталы в неизведанное...</p>
+    </div>
+    <div class="lore-item">
+      <h3 style="color: #c9a871; text-shadow: 0 0 10px rgba(201,168,113,0.5);">Эпоха V: Истинное Выживание (Настоящее время)</h3>
+      <p>Мы здесь. На новых землях RusLand. Элиты пали, все равны перед суровой природой. Летать запрещено. Мы начинаем всё с чистого листа, вооруженные лишь Правдой Русланова.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section dark" id="astrolabe">
+  <h2>Магическая Астролябия Врат</h2>
+  <div class="calculator-box">
+    <p style="color: #a89f91; margin-bottom: 20px;">Введите координаты в одном из миров, и астролябия укажет точное местоположение для врат в другом.</p>
+    
+    <div class="calc-row">
+      <div class="calc-col">
+        <h4>🌍 Верхний Мир</h4>
+        <div class="coord-inputs">
+          <div><label style="color:#5a4634;">X:</label><br><input type="number" id="ow-x" value="0"></div>
+          <div><label style="color:#5a4634;">Z:</label><br><input type="number" id="ow-z" value="0"></div>
+        </div>
+      </div>
+
+      <div class="calc-arrow">⇄</div>
+
+      <div class="calc-col" style="border-color: #8b0000; box-shadow: inset 0 0 20px rgba(139,0,0,0.2);">
+        <h4 style="color: #ff4500;">🔥 Нижний Мир (Незер)</h4>
+        <div class="coord-inputs">
+          <div><label style="color:#5a4634;">X:</label><br><input type="number" id="nt-x" value="0"></div>
+          <div><label style="color:#5a4634;">Z:</label><br><input type="number" id="nt-z" value="0"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="builder">
+  <h2>Трактаты для Зодчих</h2>
+  
+  <div class="grid" style="margin-bottom: 60px;">
+    <div class="card">
+      <h3>🪵 Палитры Блоков</h3>
+      <p>Избегайте строительства "коробок" из одного материала. Смешивайте! <strong>Дуб, булыжник и каменный кирпич</strong> — классика средневековья. Для темной готики используйте <strong>глубинный сланец (deepslate), базальт и ель</strong>.</p>
+    </div>
+    <div class="card">
+      <h3>📏 Правило Рельефа</h3>
+      <p>Не сносите горы под ноль, чтобы построить плоский фундамент. Вписывайте ваши постройки в ландшафт. Дом на склоне горы с подпорками всегда выглядит эпичнее, чем дом на идеально плоской поляне.</p>
+    </div>
+    <div class="card">
+      <h3>🌿 Озеленение</h3>
+      <p>Используйте листву, лозы, мшистый булыжник и кнопки (как камушки), чтобы "состарить" постройку. В мире RusLand природа берет своё.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="text-align: center; margin-bottom: 30px;">Тайные Свитки (Полезные Инструменты)</h3>
+    <ul class="link-list">
+      <li>
+        <a href="https://www.plotz.co.uk/" target="_blank">🔮 Plotz Modeller
+          <svg style="width:20px;height:20px;margin-left:10px" viewBox="0 0 24 24"><path fill="currentColor" d="M14,3V5H17.59L7.76,14.83L9.17,16.24L19,6.41V10H21V3M19,19H5V5H12V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19Z" /></svg>
+        </a>
+        <span>Лучший генератор идеальных сфер, куполов, башен и обсерваторий. Незаменим для масштабных проектов.</span>
+      </li>
+      <li>
+        <a href="https://haselkern.com/Minecraft-ArmorStand/" target="_blank">🎎 Armor Stand Generator
+          <svg style="width:20px;height:20px;margin-left:10px" viewBox="0 0 24 24"><path fill="currentColor" d="M14,3V5H17.59L7.76,14.83L9.17,16.24L19,6.41V10H21V3M19,19H5V5H12V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19Z" /></svg>
+        </a>
+        <span>Магия для декораторов. Позволяет создавать кастомные позы для стоек с броней (если на сервере разрешены командные блоки/плагины).</span>
+      </li>
+      <li>
+        <a href="https://minecraft-heads.com/" target="_blank">💀 База Декоративных Голов
+          <svg style="width:20px;height:20px;margin-left:10px" viewBox="0 0 24 24"><path fill="currentColor" d="M14,3V5H17.59L7.76,14.83L9.17,16.24L19,6.41V10H21V3M19,19H5V5H12V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19Z" /></svg>
+        </a>
+        <span>Огромный каталог кастомных голов (кружки, книги, яблоки, камеры) для детализации интерьеров.</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  © 2026 RUSLAND V СЕЗОН | Библиотека Знаний
+</footer>
+
+<script>
+  // Логика Калькулятора Порталов
+  const owX = document.getElementById('ow-x');
+  const owZ = document.getElementById('ow-z');
+  const ntX = document.getElementById('nt-x');
+  const ntZ = document.getElementById('nt-z');
+
+  // Из Верхнего мира в Незер (делим на 8)
+  function calcToNether() {
+    ntX.value = Math.floor(owX.value / 8);
+    ntZ.value = Math.floor(owZ.value / 8);
+  }
+
+  // Из Незера в Верхний мир (умножаем на 8)
+  function calcToOverworld() {
+    owX.value = ntX.value * 8;
+    owZ.value = ntZ.value * 8;
+  }
+
+  // Вешаем слушатели событий на ввод
+  owX.addEventListener('input', calcToNether);
+  owZ.addEventListener('input', calcToNether);
+  ntX.addEventListener('input', calcToOverworld);
+  ntZ.addEventListener('input', calcToOverworld);
+
+  // Живой Огонь (фоновые искры - те же, что на главной)
+  const canvas = document.getElementById("particles");
+  const ctx = canvas.getContext("2d");
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  let particles = [];
+  for(let i = 0; i < 70; i++){
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 2 + 0.5,
+      d: Math.random() * 1.5 + 0.5,
+      wind: Math.random() * 0.5 - 0.25,
+      o: Math.random() * 0.8 + 0.2,
+      blinkRate: Math.random() * 0.02 + 0.01
+    });
+  }
+  let time = 0;
+  function draw(){
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    time += 0.01;
+    let globalWind = Math.sin(time) * 0.5;
+
+    particles.forEach(p => {
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = "rgba(255, 140, 0, 0.5)"; 
+      p.o += Math.sin(time * 10 + p.blinkRate * 1000) * 0.01;
+      if(p.o > 1) p.o = 1; if(p.o < 0.1) p.o = 0.1;
+
+      ctx.fillStyle = `rgba(255, ${150 + Math.random()*50}, 50, ${p.o})`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+      
+      p.y -= p.d;
+      p.x += Math.sin(p.y * 0.05) * 0.5 + p.wind + globalWind; 
+      
+      if(p.y < -10){
+        p.y = canvas.height + 10;
+        p.x = Math.random() * canvas.width;
+      }
+      ctx.shadowBlur = 0; 
+    });
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+</script>
+</body>
+</html>
